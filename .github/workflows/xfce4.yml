@@ -5,14 +5,18 @@ on: workflow_dispatch
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
       PASSWORD: ${{ github.actor }}
     timeout-minutes: 9999
 
     steps:
-    - name: Setup password
+    - name: Update Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade
+    - name: Setup Password
       run: echo runner:$PASSWORD | sudo chpasswd
     - name: Install XRDP
       run: |
@@ -21,7 +25,7 @@ jobs:
         echo xfce4-session > ~/.xsession
     - name: Install XFCE4
       run: |
-        sudo apt install xfce4 xfce4-terminal
+        sudo apt-get install xfce4 xfce4-terminal
         sudo service xrdp restart
     - name: Download
       run: |
